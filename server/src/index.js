@@ -1,23 +1,25 @@
 const express = require("express");
 const session = require("express-session");
 const bodyParser = require('body-parser');
-const Keycloak = require('keycloak-connect');
+const Keycloak = require("keycloak-connect");
 const path = require("path");
+const redis = require("redis");
 
 const app = express();
 app.use(bodyParser.json());
 
-const memoryStore = new session.MemoryStore();
+const RedisStore = require("connect-redis")(session);
+const store = new RedisStore({ host: 'localhost', port: 6379, client: redis.createClient(), ttl: 86400 });
 
 app.use(session({
+    name: "web-app.session",
     secret: "mySecret",
     resave: false,
-    saveUninitialized: true,
-    store: memoryStore
+    store
 }));
 
 const keycloak = new Keycloak({
-        store: memoryStore
+        store
     }, 
     {
         clientId: "web-app",

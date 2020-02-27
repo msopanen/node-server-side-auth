@@ -6,8 +6,9 @@ Supports login/logout and invalidating session via Keycloak console
 
 ### run instructions
 
-1. Start Keycloak server
+1. Start Keycloak and Redis
     docker run -p 8080:8080 -e KEYCLOAK_USER=ADMIN -e KEYCLOAK_PASSWORD=ADMIN jboss/keycloak
+    docker run --name session-store -p 6379:6379 redis
 
 2. Import realm.json
 
